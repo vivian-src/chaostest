@@ -16,9 +16,9 @@
 # Deploying The App #
 #####################
 
-cd go-example
 
-git pull
+
+
 
 kubectl create namespace go-example
 
@@ -62,7 +62,7 @@ kubectl --namespace go-example \
 cat k8s/chaos/once.yaml
 
 # If Windows, open the address in your favorite browser manually
-open "https://github.com/vfarcic/chaostoolkit-container-image"
+open "https://github.com/vivianneo/chaostoolkit-container-image"
 
 kubectl --namespace go-example \
     apply --filename k8s/chaos/once.yaml
@@ -187,6 +187,6 @@ kubectl --namespace go-example \
 # Destroying What We Created #
 ##############################
 
-cd ..
+
 
 kubectl delete namespace go-example

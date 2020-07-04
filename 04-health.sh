@@ -14,9 +14,9 @@
 # Deploying The Application #
 #############################
 
-cd go-example
 
-git pull
+
+
 
 kubectl create namespace go-example
 
@@ -139,6 +139,6 @@ chaos run chaos/health-db.yaml
 # Destroying What We Created #
 ##############################
 
-cd ..
+
 
 kubectl delete namespace go-example

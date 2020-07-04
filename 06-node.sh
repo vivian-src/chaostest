@@ -12,9 +12,9 @@
 # Deploying The Application #
 #############################
 
-cd go-example
 
-git pull
+
+
 
 kubectl create namespace go-example
 
@@ -155,6 +155,6 @@ kubectl --namespace go-example \
 # Destroying What We Created #
 ##############################
 
-cd ..
+
 
 kubectl delete namespace go-example

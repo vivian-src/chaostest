@@ -60,9 +60,9 @@ echo $INGRESS_HOST
 # Deploying The App #
 #####################
 
-cd go-example
 
-git pull
+
+
 
 kubectl create namespace go-example
 
@@ -232,6 +232,6 @@ cat chaostoolkit.log
 # Destroying What We Created #
 ##############################
 
-cd ..
+
 
 kubectl delete namespace go-example

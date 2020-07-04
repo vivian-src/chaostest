@@ -18,9 +18,9 @@
 # Deploying The App #
 #####################
 
-cd go-example
 
-git pull
+
+
 
 kubectl create namespace go-example
 
@@ -93,7 +93,7 @@ open report.pdf
 # Destroying What We Created #
 ##############################
 
-cd ..
+
 
 kubectl delete namespace go-example
 
