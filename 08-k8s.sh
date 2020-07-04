@@ -16,23 +16,23 @@
 # Deploying The App #
 #####################
 
-cd go-demo-8
+cd go-example
 
 git pull
 
-kubectl create namespace go-demo-8
+kubectl create namespace go-example
 
-kubectl label namespace go-demo-8 \
+kubectl label namespace go-example \
     istio-injection=enabled
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/app-full
 
-kubectl --namespace go-demo-8 \
-    rollout status deployment go-demo-8
+kubectl --namespace go-example \
+    rollout status deployment go-example
 
 curl -H "Host: repeater.acme.com" \
-    "http://$INGRESS_HOST?addr=http://go-demo-8"
+    "http://$INGRESS_HOST?addr=http://go-example"
 
 # NOTE: If `Connection refused`, wait for a few moments and repeat the `curl` command
 
@@ -44,15 +44,15 @@ cat k8s/chaos/experiments.yaml
 
 # NOTE: We could create a ConfigMap through a command and include all the files. But that's not GitOps.
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/chaos/experiments.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     describe configmap chaostoolkit-experiments
 
 cat k8s/chaos/sa.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/chaos/sa.yaml
 
 ################################
@@ -64,20 +64,20 @@ cat k8s/chaos/once.yaml
 # If Windows, open the address in your favorite browser manually
 open "https://github.com/vfarcic/chaostoolkit-container-image"
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/chaos/once.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get pods \
-    --selector app=go-demo-8-chaos
+    --selector app=go-example-chaos
 
 # Repeat the previous command until `STATUS` is `Completed`
 
-kubectl --namespace go-demo-8 \
-    logs --selector app=go-demo-8-chaos \
+kubectl --namespace go-example \
+    logs --selector app=go-example-chaos \
     --tail -1
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     delete --filename k8s/chaos/once.yaml
 
 #################################
@@ -86,32 +86,32 @@ kubectl --namespace go-demo-8 \
 
 cat k8s/chaos/periodic.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/chaos/periodic.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get cronjobs
 
 # Repeat the previous command until `LAST SCHEDULE` is NOT `<none>`
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get jobs
 
 # Repeat the previous command until `COMPLETIONS` is `1/1`
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get pods
 
 ########################################
 # Running Failed Scheduled Experiments #
 ########################################
 
-kubectl --namespace go-demo-8 \
-    delete deployment go-demo-8
+kubectl --namespace go-example \
+    delete deployment go-example
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get pods \
-    --selector app=go-demo-8-chaos
+    --selector app=go-example-chaos
 
 # Repeat the previous command until the new Pod `STATUS` is `Error`
 
@@ -121,11 +121,11 @@ kubectl get pv
 
 # We could generate and extract a report based on journal files in that PersistentVolume
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/app-full
 
-kubectl --namespace go-demo-8 \
-    rollout status deployment go-demo-8
+kubectl --namespace go-example \
+    rollout status deployment go-example
 
 ####################################
 # Sending Experiment Notifications #
@@ -141,7 +141,7 @@ cat k8s/chaos/settings.yaml
 
 cat k8s/chaos/settings.yaml \
     | sed -e "s|@||g" \
-    | kubectl --namespace go-demo-8 \
+    | kubectl --namespace go-example \
     apply --filename -
 
 cat k8s/chaos/periodic-slack.yaml
@@ -149,14 +149,14 @@ cat k8s/chaos/periodic-slack.yaml
 diff k8s/chaos/periodic.yaml \
     k8s/chaos/periodic-slack.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/chaos/periodic-slack.yaml
 
 # Watch the #tests channel in Slack (join it if you haven't already). You might see notifications from others.
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get pods \
-    --selector app=go-demo-8-chaos
+    --selector app=go-example-chaos
 
 ###################################
 # Sending Selective Notifications #
@@ -169,17 +169,17 @@ diff k8s/chaos/settings.yaml \
 
 cat k8s/chaos/settings-failure.yaml \
     | sed -e "s|@||g" \
-    | kubectl --namespace go-demo-8 \
+    | kubectl --namespace go-example \
     apply --filename -
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get pods \
-    --selector app=go-demo-8-chaos
+    --selector app=go-example-chaos
 
 # Observe that there were no new notification in Slack (not from you at least)
 
-kubectl --namespace go-demo-8 \
-    delete deployment go-demo-8
+kubectl --namespace go-example \
+    delete deployment go-example
 
 # Watch the #tests channel in Slack.
 
@@ -189,4 +189,4 @@ kubectl --namespace go-demo-8 \
 
 cd ..
 
-kubectl delete namespace go-demo-8
+kubectl delete namespace go-example

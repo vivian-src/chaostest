@@ -14,18 +14,15 @@
 # Deploying The Application #
 #############################
 
-git clone \
-    https://github.com/vfarcic/go-demo-8.git
-
-cd go-demo-8
+cd go-example
 
 git pull
 
-kubectl create namespace go-demo-8
+kubectl create namespace go-example
 
 cat k8s/terminate-pods/pod.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/terminate-pods/pod.yaml
 
 #################################
@@ -48,7 +45,7 @@ chaos run chaos/terminate-pod.yaml
 
 echo $?
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get pods
 
 ###########################
@@ -64,14 +61,14 @@ chaos run chaos/terminate-pod-ssh.yaml
 
 echo $?
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/terminate-pods/pod.yaml
 
 chaos run chaos/terminate-pod-ssh.yaml
 
 echo $?
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/terminate-pods/pod.yaml
 
 #########################
@@ -87,15 +84,15 @@ chaos run chaos/terminate-pod-pause.yaml
 
 echo $?
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/terminate-pods/pod.yaml
 
 #########################
 # Phases And Conditions #
 #########################
 
-kubectl --namespace go-demo-8 \
-    describe pod go-demo-8
+kubectl --namespace go-example \
+    describe pod go-example
 
 cat chaos/terminate-pod-phase.yaml
 
@@ -106,20 +103,20 @@ chaos run chaos/terminate-pod-phase.yaml
 
 echo $?
 
-kubectl --namespace go-demo-8 \
-    logs go-demo-8
+kubectl --namespace go-example \
+    logs go-example
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/db
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     rollout status \
-    deployment go-demo-8-db
+    deployment go-example-db
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get pods
 
-# Repeat the previous command until the `go-demo-8` Pod `STATUS` is `Running`
+# Repeat the previous command until the `go-example` Pod `STATUS` is `Running`
 
 chaos run chaos/terminate-pod-phase.yaml
 
@@ -131,12 +128,12 @@ echo $?
 
 cat k8s/terminate-pods/deployment.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/terminate-pods/deployment.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     rollout status \
-    deployment go-demo-8
+    deployment go-example
 
 chaos run chaos/terminate-pod-phase.yaml
 
@@ -146,4 +143,4 @@ chaos run chaos/terminate-pod-phase.yaml
 
 cd ..
 
-kubectl delete namespace go-demo-8
+kubectl delete namespace go-example

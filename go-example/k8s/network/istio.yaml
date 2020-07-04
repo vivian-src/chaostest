@@ -1,0 +1,29 @@
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: go-example
+spec:
+  hosts:
+  - go-example
+  http:
+  - route:
+    - destination:
+        host: go-example
+        subset: primary
+        port:
+          number: 80
+
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: go-example
+spec:
+  host: go-example
+  subsets:
+  - name: primary
+    labels:
+      release: primary

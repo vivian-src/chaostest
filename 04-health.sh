@@ -14,25 +14,25 @@
 # Deploying The Application #
 #############################
 
-cd go-demo-8
+cd go-example
 
 git pull
 
-kubectl create namespace go-demo-8
+kubectl create namespace go-example
 
 cat k8s/terminate-pods/app/*
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/terminate-pods/app
 
-kubectl --namespace go-demo-8 \
-    rollout status deployment go-demo-8
+kubectl --namespace go-example \
+    rollout status deployment go-example
 
 ##############################
 # Validating The Application #
 ##############################
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get ingress
 
 kubectl apply \
@@ -74,10 +74,10 @@ echo $INGRESS_HOST
 
 cat k8s/health/ingress.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/health/ingress.yaml
 
-curl -H "Host: go-demo-8.acme.com" \
+curl -H "Host: go-example.acme.com" \
     "http://$INGRESS_HOST"
 
 #################################
@@ -88,7 +88,7 @@ cat chaos/health.yaml
 
 chaos run chaos/health.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get pods
 
 cat chaos/health-pause.yaml
@@ -98,7 +98,7 @@ diff chaos/health.yaml \
 
 chaos run chaos/health-pause.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get pods
 
 #######################################
@@ -114,10 +114,10 @@ chaos run chaos/health-http.yaml
 
 cat k8s/health/hpa.yaml
 
-kubectl apply --namespace go-demo-8 \
+kubectl apply --namespace go-example \
     --filename k8s/health/hpa.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get hpa
 
 # Repeat if the number of replicas is not `2`
@@ -141,4 +141,4 @@ chaos run chaos/health-db.yaml
 
 cd ..
 
-kubectl delete namespace go-demo-8
+kubectl delete namespace go-example

@@ -12,22 +12,22 @@
 # Deploying The Application #
 #############################
 
-cd go-demo-8
+cd go-example
 
 git pull
 
-kubectl create namespace go-demo-8
+kubectl create namespace go-example
 
-kubectl label namespace go-demo-8 \
+kubectl label namespace go-example \
     istio-injection=enabled
 
-kubectl --namespace go-demo-8 
+kubectl --namespace go-example 
     apply --filename k8s/app-db
 
-kubectl --namespace go-demo-8 \
-    rollout status deployment go-demo-8
+kubectl --namespace go-example \
+    rollout status deployment go-example
 
-curl -H "Host: go-demo-8.acme.com" \
+curl -H "Host: go-example.acme.com" \
     "http://$INGRESS_HOST"
 
 ###########################
@@ -140,7 +140,7 @@ kubectl get nodes
 
 # NOTE: You might need to terminate the node that was removed from Kubernetes
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get pods
 
 ############################
@@ -157,4 +157,4 @@ kubectl --namespace go-demo-8 \
 
 cd ..
 
-kubectl delete namespace go-demo-8
+kubectl delete namespace go-example

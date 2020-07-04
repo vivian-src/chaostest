@@ -18,23 +18,23 @@
 # Deploying The App #
 #####################
 
-cd go-demo-8
+cd go-example
 
 git pull
 
-kubectl create namespace go-demo-8
+kubectl create namespace go-example
 
-kubectl label namespace go-demo-8 \
+kubectl label namespace go-example \
     istio-injection=enabled
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/app-full
 
-kubectl --namespace go-demo-8 \
-    rollout status deployment go-demo-8
+kubectl --namespace go-example \
+    rollout status deployment go-example
 
 curl -H "Host: repeater.acme.com" \
-    "http://$INGRESS_HOST?addr=http://go-demo-8"
+    "http://$INGRESS_HOST?addr=http://go-example"
 
 #################################
 # Exploring Experiments Journal #
@@ -95,6 +95,6 @@ open report.pdf
 
 cd ..
 
-kubectl delete namespace go-demo-8
+kubectl delete namespace go-example
 
 # NOTE: Stop Docker daemon

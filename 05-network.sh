@@ -60,41 +60,41 @@ echo $INGRESS_HOST
 # Deploying The App #
 #####################
 
-cd go-demo-8
+cd go-example
 
 git pull
 
-kubectl create namespace go-demo-8
+kubectl create namespace go-example
 
-kubectl label namespace go-demo-8 \
+kubectl label namespace go-example \
     istio-injection=enabled
 
 cat k8s/health/app/*
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/health/app/
 
-kubectl --namespace go-demo-8 \
-    rollout status deployment go-demo-8
+kubectl --namespace go-example \
+    rollout status deployment go-example
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     get pods
 
 cat k8s/network/istio.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/network/istio.yaml
 
 cat k8s/network/repeater/*
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/network/repeater
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     rollout status deployment repeater
 
 curl -H "Host: repeater.acme.com" \
-    "http://$INGRESS_HOST?addr=http://go-demo-8"
+    "http://$INGRESS_HOST?addr=http://go-example"
 
 ############################
 # Discovering Istio Plugin #
@@ -120,18 +120,18 @@ chaos run chaos/network.yaml
 
 for i in {1..10}; do 
     curl -H "Host: repeater.acme.com" \
-        "http://$INGRESS_HOST?addr=http://go-demo-8"
+        "http://$INGRESS_HOST?addr=http://go-example"
     echo ""
 done
 
-kubectl --namespace go-demo-8 \
-    describe virtualservice go-demo-8
+kubectl --namespace go-example \
+    describe virtualservice go-example
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/network/istio.yaml
 
-kubectl --namespace go-demo-8 \
-    describe virtualservice go-demo-8
+kubectl --namespace go-example \
+    describe virtualservice go-example
 
 cat chaos/network-rollback.yaml
 
@@ -142,11 +142,11 @@ chaos run chaos/network-rollback.yaml
 
 for i in {1..10}; do 
     curl -H "Host: repeater.acme.com" \
-        "http://$INGRESS_HOST?addr=http://go-demo-8"
+        "http://$INGRESS_HOST?addr=http://go-example"
 done
 
-kubectl --namespace go-demo-8 \
-    describe virtualservice go-demo-8
+kubectl --namespace go-example \
+    describe virtualservice go-example
 
 ########################################################
 # Making The App Resilient To Partial Network Failures #
@@ -157,7 +157,7 @@ cat k8s/network/istio-repeater.yaml
 # If Windows, open the address manually in your favorite browser
 open https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/router_filter#x-envoy-retry-on
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/network/istio-repeater.yaml
 
 chaos run chaos/network-rollback.yaml
@@ -178,7 +178,7 @@ cat k8s/network/istio-delay.yaml
 diff k8s/network/istio-repeater.yaml \
     k8s/network/istio-delay.yaml
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     apply --filename k8s/network/istio-delay.yaml
 
 chaos run chaos/network-delay.yaml
@@ -200,21 +200,21 @@ chaos run chaos/network-abort-100.yaml
 # Simulating Denial Of Service Attacks #
 ########################################
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     run siege \
     --image yokogawa/siege \
     --generator run-pod/v1 \
     -it --rm \
-    -- --concurrent 50 --time 20S "http://go-demo-8"
+    -- --concurrent 50 --time 20S "http://go-example"
 
 cat main.go
 
-kubectl --namespace go-demo-8 \
+kubectl --namespace go-example \
     run siege \
     --image yokogawa/siege \
     --generator run-pod/v1 \
     -it --rm \
-    -- --concurrent 50 --time 20S "http://go-demo-8/limiter"
+    -- --concurrent 50 --time 20S "http://go-example/limiter"
 
 #####################################
 # Running Denial Of Service Attacks #
@@ -234,4 +234,4 @@ cat chaostoolkit.log
 
 cd ..
 
-kubectl delete namespace go-demo-8
+kubectl delete namespace go-example
